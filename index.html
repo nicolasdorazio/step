@@ -9,7 +9,7 @@
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fff; padding: 32px; }
     h1 { text-align: center; font-size: 22px; font-weight: 700; margin-bottom: 4px; }
     .subtitle { text-align: center; font-size: 15px; color: #555; margin-bottom: 24px; }
-    .caption { font-size: 12px; color: #777; text-align: center; margin-bottom: 16px; }
+    .caption { display: none; }
     .board { display: grid; grid-template-columns: repeat(5, minmax(0,1fr)); gap: 0; border: 1px solid #000; }
     .col { border-right: 1px solid #000; display: flex; flex-direction: column; }
     .col:last-child { border-right: none; }
@@ -18,10 +18,12 @@
     .meta-row { font-size: 12px; text-align: center; padding: 6px 8px; border-bottom: 1px solid #000; }
     .meta-row a { color: #185FA5; text-decoration: underline; }
     .meta-row a:hover { color: #0C447C; }
+    .meta-row a.location-link { color: #000; text-decoration: none; }
+    .meta-row a.location-link:hover { color: #000; text-decoration: none; }
     .body { padding: 6px; display: flex; flex-direction: column; gap: 5px; flex: 1; }
     .card { background: #f1f3f7; border-radius: 5px; padding: 6px; text-align: center; }
     .time { font-weight: 700; font-size: 11px; color: #185FA5; margin-bottom: 2px; }
-    .title { font-style: italic; font-size: 12px; color: #111; margin-bottom: 2px; }
+    .title { font-style: italic; font-size: 12px; color: #111; margin-bottom: 0; }
     .speaker a { font-size: 11px; color: #185FA5; text-decoration: underline; }
     .speaker a:hover { color: #0C447C; }
 
@@ -44,6 +46,8 @@
 
 <div class="board" id="board"></div>
 
+<p style="text-align: center; font-size: 12px; color: #777; margin-top: 20px;">To request edits, contact <a href="mailto:ndorazio@wharton.upenn.edu" style="color: #777;">ndorazio@wharton.upenn.edu</a></p>
+
 <div id="modal-bg">
   <div id="modal">
     <h3 id="m-title"></h3>
@@ -62,7 +66,7 @@ const days = [
     events: [
       {time:"Until 6:00 pm", title:"Hang Welcome Posters", speaker:null, speakerUrl:null, desc:"Volunteers help decorate the space with welcome posters ahead of the welcome dinner."},
       {time:"6:00 – 8:00 pm", title:"Welcome Dinner", speaker:"with Cait Lamberton", speakerUrl:"https://marketing.wharton.upenn.edu/profile/catlam/", desc:"Kickoff dinner with remarks from Cait Lamberton, Vice Dean and Director of the Wharton Undergraduate Division."},
-      {time:"8:00 pm onward", title:"Hang Welcome Posters", speaker:null, speakerUrl:null, desc:"Continued setup of welcome materials for the week."}
+      {time:"8:00 pm Onward", title:"Hang Welcome Posters", speaker:null, speakerUrl:null, desc:"Continued setup of welcome materials for the week."}
     ]
   },
   {
@@ -85,10 +89,10 @@ const days = [
     formUrl: "https://forms.gle/CzeRC8iTgkTpxSan6",
     events: [
       {time:"9:00 – 9:30 am", title:"Breakfast", speaker:null, speakerUrl:null, desc:"Breakfast and informal mingling."},
-      {time:"9:30 – 11:30 am", title:"Network Mapping", speaker:"with Drew Carton", speakerUrl:"https://management.wharton.upenn.edu/profile/dcarton/", desc:"Session led by Drew Carton, Wharton management professor, on mapping personal and professional support networks."},
+      {time:"9:30 – 11:30 am", title:"Network Mapping", speaker:"with Drew Carton", speakerUrl:"https://mgmt.wharton.upenn.edu/profile/carton/", desc:"Session led by Drew Carton, Wharton management professor, on mapping personal and professional support networks."},
       {time:"11:30 am – 12:00 pm", title:"Break", speaker:null, speakerUrl:null, desc:"Short break."},
       {time:"12:00 – 12:50 pm", title:"Working Lunch: Exploring Seeds of Business", speaker:null, speakerUrl:null, desc:"Working lunch session exploring early-stage business concepts."},
-      {time:"1:00 – 4:00 pm", title:"NSO Circles Training", speaker:"with Pablo Cerdera", speakerUrl:"https://www.google.com/search?q=Pablo+Cerdera+Penn", desc:"Training on facilitating NSO circles for incoming students."},
+      {time:"1:00 – 4:00 pm", title:"NSO Circles Training", speaker:"with Pablo Cerdera", speakerUrl:"https://csa.upenn.edu/about-us/team/pablo-miguel-cerdera", desc:"Training on facilitating NSO circles for incoming students."},
       {time:"4:00 – 4:15 pm", title:"Break", speaker:null, speakerUrl:null, desc:"Short break."},
       {time:"4:15 – 5:00 pm", title:"Meet STEP", speaker:null, speakerUrl:null, desc:"Introduction to the STEP program and its mentor community."},
       {time:"5:00 – 6:00 pm", title:"TBD", speaker:null, speakerUrl:null, desc:"Session details to be announced."},
@@ -96,12 +100,12 @@ const days = [
     ]
   },
   {
-    date: "Thursday, Aug 20, 2026", theme: "Nuts and Bolts of Mentorship\n(w/ WH1010 TAs)",
+    date: "Thursday, Aug 20, 2026", theme: "Nuts and Bolts of Mentorship\n(w/WH1010 TAs)",
     location: "[location]", mapUrl: "https://www.google.com/maps/search/?api=1&query=University+of+Pennsylvania+Philadelphia+PA",
     formUrl: "https://forms.gle/xe6idbyWiUmtKLnH7",
     events: [
       {time:"9:00 – 9:30 am", title:"Breakfast", speaker:null, speakerUrl:null, desc:"Breakfast and informal mingling."},
-      {time:"9:30 – 10:45 am", title:"Developmental Relationships & Building Awareness", speaker:"with Stephanie Creary", speakerUrl:"https://management.wharton.upenn.edu/profile/screary/", desc:"Session led by Stephanie Creary on developmental relationships and self-awareness in mentorship."},
+      {time:"9:30 – 10:45 am", title:"Developmental Relationships <br> & Building Awareness", speaker:"with Stephanie Creary", speakerUrl:"https://mgmt.wharton.upenn.edu/profile/sjcreary/", desc:"Session led by Stephanie Creary on developmental relationships and self-awareness in mentorship."},
       {time:"10:45 am – 12:45 pm", title:"Coach Approach", speaker:"with Lisa Kramer", speakerUrl:"https://www.google.com/search?q=Lisa+Kramer+coach+approach+Wharton", desc:"Workshop introducing coaching frameworks for mentors led by Lisa Kramer."},
       {time:"12:45 – 1:45 pm", title:"Lunch", speaker:null, speakerUrl:null, desc:"Lunch break."},
       {time:"2:00 – 4:00 pm", title:"Team Building Activity", speaker:null, speakerUrl:null, desc:"Joint team-building activity with WH1010 TAs."},
@@ -112,14 +116,14 @@ const days = [
     ]
   },
   {
-    date: "Friday, Aug 21, 2026", theme: "Leading with Dignity\n(w/ WH1010 TAs)",
+    date: "Friday, Aug 21, 2026", theme: "Leading with Dignity\n(w/WH1010 TAs)",
     location: "[location]", mapUrl: "https://www.google.com/maps/search/?api=1&query=University+of+Pennsylvania+Philadelphia+PA",
     formUrl: "https://forms.gle/sULrZutzWMm4LLkWA",
     events: [
       {time:"9:00 – 9:30 am", title:"Breakfast", speaker:"with Cait Lamberton", speakerUrl:"https://marketing.wharton.upenn.edu/profile/catlam/", desc:"Breakfast with Cait Lamberton."},
       {time:"9:30 am – 12:30 pm", title:"Dignity Centered Leadership", speaker:"with Justin Brown", speakerUrl:"https://www.google.com/search?q=Justin+Brown+Wharton+dignity+leadership", desc:"Workshop on dignity-centered leadership led by Justin Brown."},
       {time:"12:30 – 1:00 pm", title:"Lunch", speaker:null, speakerUrl:null, desc:"Lunch break."},
-      {time:"1:00 – 4:00 pm", title:"SLB-Led Training", speaker:null, speakerUrl:null, desc:"Training session led by Student Life Board members."},
+      {time:"1:00 – 4:00 pm", title:"SLB-Led Training", speaker:null, speakerUrl:null, desc:"Training session led by STEP Leadership Board members."},
       {time:"4:00 – 5:00 pm", title:"Parking Lot & Closing Survey", speaker:null, speakerUrl:null, desc:"Final open Q&A and program closing survey."},
       {time:"5:00 – 6:00 pm", title:"Closing Dinner", speaker:null, speakerUrl:null, desc:"Final dinner celebrating the completion of fall training."}
     ]
@@ -141,7 +145,7 @@ days.forEach(day => {
 
   col.innerHTML = `<div class="day-header">${day.date}</div>
     <div class="theme">${day.theme.replace('\n','<br>')}</div>
-    <div class="meta-row"><a href="${day.mapUrl}" target="_blank">${day.location} (map)</a></div>
+    <div class="meta-row"><a class="location-link" href="${day.mapUrl}" target="_blank">${day.location}</a></div>
     <div class="meta-row"><a href="${day.formUrl}" target="_blank">Attendance Form</a></div>`;
 
   const body = document.createElement('div');
@@ -153,7 +157,7 @@ days.forEach(day => {
     card.style.cursor = 'pointer';
     card.innerHTML = `<div class="time">${ev.time}</div><div class="title">${toTitleCase(ev.title)}</div>${ev.speaker ? `<div class="speaker"><a href="${ev.speakerUrl}" target="_blank" onclick="event.stopPropagation()">${ev.speaker}</a></div>` : ''}`;
     card.addEventListener('click', () => {
-      document.getElementById('m-title').textContent = toTitleCase(ev.title);
+      document.getElementById('m-title').innerHTML = toTitleCase(ev.title);
       document.getElementById('m-time').textContent = ev.time + (ev.speaker ? ' · ' + ev.speaker : '');
       document.getElementById('m-desc').textContent = ev.desc;
       document.getElementById('modal-bg').classList.add('open');
