@@ -25,6 +25,7 @@
     .time { font-weight: 700; font-size: 13px; color: #185FA5; margin-bottom: 3.5px; }
     .title { font-style: italic; font-size: 14px; color: #111; margin-bottom: 0; }
     .speaker { line-height: 1; }
+    .optional { font-size: 11px; color: #7BAFD4; font-style: italic; margin-top: 3px; }
     .speaker a { font-size: 13px; color: #185FA5; text-decoration: underline; }
     .speaker a:hover { color: #0C447C; }
 
@@ -37,6 +38,16 @@
     #modal .mdesc { font-size: 16px; margin-bottom: 14px; }
     #modal button { padding: 6px 16px; border: 1px solid #ccc; border-radius: 6px; background: #f5f5f5; cursor: pointer; font-size: 15px; }
     #modal button:hover { background: #e0e0e0; }
+
+    @media (max-width: 700px) {
+      body { padding: 16px; }
+      h1 { font-size: 20px; }
+      .subtitle { font-size: 15px; }
+      .board { grid-template-columns: 1fr; }
+      .col { border-right: none; border-bottom: 1px solid #000; }
+      .col:last-child { border-bottom: none; }
+      .theme { min-height: unset; }
+    }
   </style>
 </head>
 <body>
@@ -65,9 +76,9 @@ const days = [
     location: "[location]", mapUrl: "https://www.google.com/maps/search/?api=1&query=University+of+Pennsylvania+Philadelphia+PA",
     formUrl: "https://forms.gle/jqBdU61gYx8pjxBU9",
     events: [
-      {time:"Until 6:00 pm", title:"Hang Welcome Posters", speaker:null, speakerUrl:null, desc:"Volunteers help decorate the space with welcome posters ahead of the welcome dinner."},
-      {time:"6:00 – 8:00 pm", title:"Welcome Dinner", speaker:"with Cait Lamberton", speakerUrl:"https://marketing.wharton.upenn.edu/profile/catlam/", desc:"Kickoff dinner with remarks from Cait Lamberton, Vice Dean and Director of the Wharton Undergraduate Division."},
-      {time:"8:00 pm Onward", title:"Hang Welcome Posters", speaker:null, speakerUrl:null, desc:"Continued setup of welcome materials for the week."}
+      {time:"Until 6:00 pm", title:"Hang Welcome Posters", speaker:null, speakerUrl:null, optional:true, desc:"Volunteers go door-to-door through the first-year dorms, hanging personalized 'Hi [name], welcome to Cohort [blank]!' signs on each student's door — a tradition we do every year before training begins."},
+      {time:"6:00 – 8:00 pm", title:"Welcome Dinner", speaker:"with Cait Lamberton", speakerUrl:"https://marketing.wharton.upenn.edu/profile/catlam/", optional:true, desc:"Kickoff dinner with remarks from Cait Lamberton, Vice Dean and Director of the Wharton Undergraduate Division."},
+      {time:"8:00 pm Onward", title:"Hang Welcome Posters", speaker:null, speakerUrl:null, optional:true, desc:"Continued door-to-door poster hanging through the first-year dorms for those who couldn't make it earlier."}
     ]
   },
   {
@@ -156,7 +167,7 @@ days.forEach(day => {
     const card = document.createElement('div');
     card.className = 'card';
     card.style.cursor = 'pointer';
-    card.innerHTML = `<div class="time">${ev.time}</div><div class="title">${toTitleCase(ev.title)}</div>${ev.speaker ? `<div class="speaker"><a href="${ev.speakerUrl}" target="_blank" onclick="event.stopPropagation()">${ev.speaker}</a></div>` : ''}`;
+    card.innerHTML = `<div class="time">${ev.time}</div><div class="title">${toTitleCase(ev.title)}</div>${ev.speaker ? `<div class="speaker"><a href="${ev.speakerUrl}" target="_blank" onclick="event.stopPropagation()">${ev.speaker}</a></div>` : ''}${ev.optional ? '<div class="optional">* optional</div>' : ''}`;
     card.addEventListener('click', () => {
       document.getElementById('m-title').innerHTML = toTitleCase(ev.title);
       document.getElementById('m-time').textContent = ev.time + (ev.speaker ? ' · ' + ev.speaker : '');
