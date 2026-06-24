@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>STEP Fall Training Schedule | August 17–21, 2026</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fff; padding: 32px; }
+    h1 { text-align: center; font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+    .subtitle { text-align: center; font-size: 15px; color: #555; margin-bottom: 24px; }
+    .caption { font-size: 12px; color: #777; text-align: center; margin-bottom: 16px; }
+    .board { display: grid; grid-template-columns: repeat(5, minmax(0,1fr)); gap: 0; border: 1px solid #000; }
+    .col { border-right: 1px solid #000; display: flex; flex-direction: column; }
+    .col:last-child { border-right: none; }
+    .day-header { background: #0C447C; color: #fff; font-weight: 700; font-size: 13px; text-align: center; padding: 10px 8px; }
+    .theme { background: #B5D4F4; color: #042C53; font-style: italic; font-size: 12px; text-align: center; padding: 8px; border-bottom: 1px solid #000; border-top: 1px solid #000; min-height: 48px; display: flex; align-items: center; justify-content: center; }
+    .meta-row { font-size: 12px; text-align: center; padding: 6px 8px; border-bottom: 1px solid #000; }
+    .meta-row a { color: #185FA5; text-decoration: underline; }
+    .meta-row a:hover { color: #0C447C; }
+    .body { padding: 6px; display: flex; flex-direction: column; gap: 5px; flex: 1; }
+    .card { background: #f1f3f7; border-radius: 5px; padding: 6px; text-align: center; }
+    .time { font-weight: 700; font-size: 11px; color: #185FA5; margin-bottom: 2px; }
+    .title { font-style: italic; font-size: 12px; color: #111; margin-bottom: 2px; }
+    .speaker a { font-size: 11px; color: #185FA5; text-decoration: underline; }
+    .speaker a:hover { color: #0C447C; }
+
+    /* Modal */
+    #modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); align-items: center; justify-content: center; z-index: 1000; }
+    #modal-bg.open { display: flex; }
+    #modal { background: #fff; color: #1a1a1a; border-radius: 10px; border: 1px solid #ccc; padding: 20px; max-width: 420px; width: 90%; }
+    #modal h3 { margin-bottom: 6px; font-size: 16px; }
+    #modal .mtime { font-size: 13px; color: #555; margin-bottom: 8px; }
+    #modal .mdesc { font-size: 14px; margin-bottom: 14px; }
+    #modal button { padding: 6px 16px; border: 1px solid #ccc; border-radius: 6px; background: #f5f5f5; cursor: pointer; font-size: 13px; }
+    #modal button:hover { background: #e0e0e0; }
+  </style>
+</head>
+<body>
+
+<h1>STEP Fall Training Schedule</h1>
+<p class="subtitle">August 17–21, 2026</p>
+<p class="caption">Click any session for details &nbsp;·&nbsp; Speaker names link to their profile &nbsp;·&nbsp; Locations link to maps &nbsp;·&nbsp; Attendance forms linked per day</p>
+
+<div class="board" id="board"></div>
+
+<div id="modal-bg">
+  <div id="modal">
+    <h3 id="m-title"></h3>
+    <p class="mtime" id="m-time"></p>
+    <p class="mdesc" id="m-desc"></p>
+    <button onclick="closeModal()">Close</button>
+  </div>
+</div>
+
+<script>
+const days = [
+  {
+    date: "Monday, Aug 17, 2026", theme: "Setting the Stage for Exploration",
+    location: "[location]", mapUrl: "https://www.google.com/maps/search/?api=1&query=University+of+Pennsylvania+Philadelphia+PA",
+    formUrl: "https://forms.gle/jqBdU61gYx8pjxBU9",
+    events: [
+      {time:"Until 6:00 pm", title:"Hang Welcome Posters", speaker:null, speakerUrl:null, desc:"Volunteers help decorate the space with welcome posters ahead of the welcome dinner."},
+      {time:"6:00 – 8:00 pm", title:"Welcome Dinner", speaker:"with Cait Lamberton", speakerUrl:"https://marketing.wharton.upenn.edu/profile/catlam/", desc:"Kickoff dinner with remarks from Cait Lamberton, Vice Dean and Director of the Wharton Undergraduate Division."},
+      {time:"8:00 pm onward", title:"Hang Welcome Posters", speaker:null, speakerUrl:null, desc:"Continued setup of welcome materials for the week."}
+    ]
+  },
+  {
+    date: "Tuesday, Aug 18, 2026", theme: "The Values of Exploration",
+    location: "ARCH Auditorium (208)", mapUrl: "https://www.google.com/maps/search/?api=1&query=ARCH+Building+3601+Locust+Walk+Philadelphia+PA",
+    formUrl: "https://forms.gle/EiriGG8BLAAo48wh9",
+    events: [
+      {time:"9:00 – 9:30 am", title:"Breakfast", speaker:null, speakerUrl:null, desc:"Breakfast and informal mingling before the day's sessions."},
+      {time:"9:30 – 10:00 am", title:"Housekeeping & Updates", speaker:null, speakerUrl:null, desc:"Logistics, announcements, and program updates for the week."},
+      {time:"10:00 am – 12:00 pm", title:"Opening Keynote", speaker:"with Angela Duckworth", speakerUrl:"https://psychology.sas.upenn.edu/people/angela-duckworth", desc:"Opening keynote from Angela Duckworth, Penn psychology professor and author known for her research on grit and self-control."},
+      {time:"12:00 – 1:00 pm", title:"Lunch", speaker:null, speakerUrl:null, desc:"Lunch break."},
+      {time:"1:00 – 5:00 pm", title:"Values Bridge", speaker:"with Suzy Welch", speakerUrl:"https://www.stern.nyu.edu/faculty/bio/suzy-welch", desc:"Workshop led by Suzy Welch on connecting personal values to leadership and mentorship practice."},
+      {time:"5:30 – 5:45 pm", title:"Parking Lot", speaker:null, speakerUrl:null, desc:"Open Q&A and unresolved questions session."},
+      {time:"6:00 – 7:00 pm", title:"Dinner & Activities", speaker:null, speakerUrl:null, desc:"Group dinner followed by community-building activities."}
+    ]
+  },
+  {
+    date: "Wednesday, Aug 19, 2026", theme: "Network Mapping & Resource Sharing",
+    location: "[location]", mapUrl: "https://www.google.com/maps/search/?api=1&query=University+of+Pennsylvania+Philadelphia+PA",
+    formUrl: "https://forms.gle/CzeRC8iTgkTpxSan6",
+    events: [
+      {time:"9:00 – 9:30 am", title:"Breakfast", speaker:null, speakerUrl:null, desc:"Breakfast and informal mingling."},
+      {time:"9:30 – 11:30 am", title:"Network Mapping", speaker:"with Drew Carton", speakerUrl:"https://management.wharton.upenn.edu/profile/dcarton/", desc:"Session led by Drew Carton, Wharton management professor, on mapping personal and professional support networks."},
+      {time:"11:30 am – 12:00 pm", title:"Break", speaker:null, speakerUrl:null, desc:"Short break."},
+      {time:"12:00 – 12:50 pm", title:"Working Lunch: Exploring Seeds of Business", speaker:null, speakerUrl:null, desc:"Working lunch session exploring early-stage business concepts."},
+      {time:"1:00 – 4:00 pm", title:"NSO Circles Training", speaker:"with Pablo Cerdera", speakerUrl:"https://www.google.com/search?q=Pablo+Cerdera+Penn", desc:"Training on facilitating NSO circles for incoming students."},
+      {time:"4:00 – 4:15 pm", title:"Break", speaker:null, speakerUrl:null, desc:"Short break."},
+      {time:"4:15 – 5:00 pm", title:"Meet STEP", speaker:null, speakerUrl:null, desc:"Introduction to the STEP program and its mentor community."},
+      {time:"5:00 – 6:00 pm", title:"TBD", speaker:null, speakerUrl:null, desc:"Session details to be announced."},
+      {time:"6:00 – 7:00 pm", title:"Dinner & Activities", speaker:null, speakerUrl:null, desc:"Group dinner followed by community-building activities."}
+    ]
+  },
+  {
+    date: "Thursday, Aug 20, 2026", theme: "Nuts and Bolts of Mentorship\n(w/ WH1010 TAs)",
+    location: "[location]", mapUrl: "https://www.google.com/maps/search/?api=1&query=University+of+Pennsylvania+Philadelphia+PA",
+    formUrl: "https://forms.gle/xe6idbyWiUmtKLnH7",
+    events: [
+      {time:"9:00 – 9:30 am", title:"Breakfast", speaker:null, speakerUrl:null, desc:"Breakfast and informal mingling."},
+      {time:"9:30 – 10:45 am", title:"Developmental Relationships & Building Awareness", speaker:"with Stephanie Creary", speakerUrl:"https://management.wharton.upenn.edu/profile/screary/", desc:"Session led by Stephanie Creary on developmental relationships and self-awareness in mentorship."},
+      {time:"10:45 am – 12:45 pm", title:"Coach Approach", speaker:"with Lisa Kramer", speakerUrl:"https://www.google.com/search?q=Lisa+Kramer+coach+approach+Wharton", desc:"Workshop introducing coaching frameworks for mentors led by Lisa Kramer."},
+      {time:"12:45 – 1:45 pm", title:"Lunch", speaker:null, speakerUrl:null, desc:"Lunch break."},
+      {time:"2:00 – 4:00 pm", title:"Team Building Activity", speaker:null, speakerUrl:null, desc:"Joint team-building activity with WH1010 TAs."},
+      {time:"4:00 – 4:15 pm", title:"Break", speaker:null, speakerUrl:null, desc:"Short break."},
+      {time:"4:15 – 5:30 pm", title:"STEP x 1010TA Bonding", speaker:null, speakerUrl:null, desc:"Joint bonding session between STEP mentors and WH1010 TAs."},
+      {time:"5:30 – 6:00 pm", title:"Break", speaker:null, speakerUrl:null, desc:"Short break."},
+      {time:"6:00 – 7:00 pm", title:"Dinner & Activities", speaker:null, speakerUrl:null, desc:"Group dinner followed by community-building activities."}
+    ]
+  },
+  {
+    date: "Friday, Aug 21, 2026", theme: "Leading with Dignity\n(w/ WH1010 TAs)",
+    location: "[location]", mapUrl: "https://www.google.com/maps/search/?api=1&query=University+of+Pennsylvania+Philadelphia+PA",
+    formUrl: "https://forms.gle/sULrZutzWMm4LLkWA",
+    events: [
+      {time:"9:00 – 9:30 am", title:"Breakfast", speaker:"with Cait Lamberton", speakerUrl:"https://marketing.wharton.upenn.edu/profile/catlam/", desc:"Breakfast with Cait Lamberton."},
+      {time:"9:30 am – 12:30 pm", title:"Dignity Centered Leadership", speaker:"with Justin Brown", speakerUrl:"https://www.google.com/search?q=Justin+Brown+Wharton+dignity+leadership", desc:"Workshop on dignity-centered leadership led by Justin Brown."},
+      {time:"12:30 – 1:00 pm", title:"Lunch", speaker:null, speakerUrl:null, desc:"Lunch break."},
+      {time:"1:00 – 4:00 pm", title:"SLB-Led Training", speaker:null, speakerUrl:null, desc:"Training session led by Student Life Board members."},
+      {time:"4:00 – 5:00 pm", title:"Parking Lot & Closing Survey", speaker:null, speakerUrl:null, desc:"Final open Q&A and program closing survey."},
+      {time:"5:00 – 6:00 pm", title:"Closing Dinner", speaker:null, speakerUrl:null, desc:"Final dinner celebrating the completion of fall training."}
+    ]
+  }
+];
+
+const smallWords = new Set(['a','an','and','the','of','in','on','at','to','for','with','vs','&']);
+function toTitleCase(str) {
+  return str.split(' ').map((w,i) => i !== 0 && smallWords.has(w.toLowerCase()) ? w.toLowerCase() : w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+}
+
+function closeModal() { document.getElementById('modal-bg').classList.remove('open'); }
+
+const board = document.getElementById('board');
+
+days.forEach(day => {
+  const col = document.createElement('div');
+  col.className = 'col';
+
+  col.innerHTML = `<div class="day-header">${day.date}</div>
+    <div class="theme">${day.theme.replace('\n','<br>')}</div>
+    <div class="meta-row"><a href="${day.mapUrl}" target="_blank">${day.location} (map)</a></div>
+    <div class="meta-row"><a href="${day.formUrl}" target="_blank">Attendance Form</a></div>`;
+
+  const body = document.createElement('div');
+  body.className = 'body';
+
+  day.events.forEach(ev => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.style.cursor = 'pointer';
+    card.innerHTML = `<div class="time">${ev.time}</div><div class="title">${toTitleCase(ev.title)}</div>${ev.speaker ? `<div class="speaker"><a href="${ev.speakerUrl}" target="_blank" onclick="event.stopPropagation()">${ev.speaker}</a></div>` : ''}`;
+    card.addEventListener('click', () => {
+      document.getElementById('m-title').textContent = toTitleCase(ev.title);
+      document.getElementById('m-time').textContent = ev.time + (ev.speaker ? ' · ' + ev.speaker : '');
+      document.getElementById('m-desc').textContent = ev.desc;
+      document.getElementById('modal-bg').classList.add('open');
+    });
+    body.appendChild(card);
+  });
+
+  col.appendChild(body);
+  board.appendChild(col);
+});
+
+document.getElementById('modal-bg').addEventListener('click', e => { if (e.target.id === 'modal-bg') closeModal(); });
+</script>
+</body>
+</html>
