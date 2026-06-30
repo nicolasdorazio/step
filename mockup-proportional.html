@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MOCKUP — Proportional Time Layout</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f0f2f5; padding: 28px; }
+
+    .page-header { text-align: center; margin-bottom: 18px; }
+    h1 { font-size: 20px; font-weight: 700; color: #0C447C; }
+    .sub { font-size: 14px; color: #666; margin-top: 4px; }
+    .badge { display: inline-block; background: #fff3cd; border: 1px solid #ffc107; color: #7a5900; font-size: 12px; font-weight: 600; padding: 3px 12px; border-radius: 12px; margin-top: 10px; }
+
+    .legend { display: flex; gap: 16px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap; }
+    .legend-item { display: flex; align-items: center; gap: 5px; font-size: 12px; color: #444; }
+    .legend-swatch { width: 14px; height: 14px; border-radius: 2px; border-left: 3px solid; }
+
+    .wrap { overflow-x: auto; }
+    .schedule { display: flex; background: #fff; border: 1px solid #bbb; border-radius: 6px; overflow: hidden; min-width: 560px; }
+
+    /* Time axis column */
+    .time-col { width: 46px; flex-shrink: 0; display: flex; flex-direction: column; background: #f7f8fa; border-right: 1px solid #ddd; }
+    .time-header { height: 36px; flex-shrink: 0; }
+    .time-body { position: relative; }
+    .time-label { position: absolute; right: 5px; font-size: 9px; color: #aaa; transform: translateY(-50%); white-space: nowrap; }
+
+    /* Day columns */
+    .day-col { flex: 1; min-width: 120px; display: flex; flex-direction: column; border-right: 1px solid #ddd; }
+    .day-col:last-child { border-right: none; }
+    .day-header { height: 36px; background: #0C447C; color: #fff; font-weight: 700; font-size: 12px; text-align: center; display: flex; align-items: center; justify-content: center; padding: 0 4px; flex-shrink: 0; }
+    .day-body { position: relative; }
+
+    .hour-line { position: absolute; left: 0; right: 0; pointer-events: none; }
+
+    /* Event blocks */
+    .evt { position: absolute; left: 3px; right: 3px; border-radius: 3px; padding: 2px 4px; overflow: hidden; }
+    .evt-session  { background: #ddeeff; border-left: 3px solid #185FA5; }
+    .evt-meal     { background: #e6f4ea; border-left: 3px solid #4caf50; }
+    .evt-break    { background: #f0f0f0; border-left: 3px solid #bbb; }
+    .evt-optional { background: #fff3e0; border-left: 3px solid #e07000; }
+    .evt-time   { font-size: 9px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .evt-session .evt-time  { color: #185FA5; }
+    .evt-meal    .evt-time  { color: #388e3c; }
+    .evt-break   .evt-time  { color: #888; }
+    .evt-optional .evt-time { color: #b85c00; }
+    .evt-title  { font-size: 10px; font-style: italic; color: #111; line-height: 1.2; }
+    .evt-speaker{ font-size: 9px; color: #555; margin-top: 1px; }
+  </style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>Wharton Undergraduate Division — Fall Training 2026</h1>
+  <div class="sub">August 17–21, 2026</div>
+  <div class="badge">MOCKUP — proportional time layout</div>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-swatch" style="background:#ddeeff;border-left-color:#185FA5"></div>Session</div>
+  <div class="legend-item"><div class="legend-swatch" style="background:#e6f4ea;border-left-color:#4caf50"></div>Meal</div>
+  <div class="legend-item"><div class="legend-swatch" style="background:#f0f0f0;border-left-color:#bbb"></div>Break</div>
+  <div class="legend-item"><div class="legend-swatch" style="background:#fff3e0;border-left-color:#e07000"></div>Optional</div>
+</div>
+
+<div class="wrap">
+  <div class="schedule" id="schedule"></div>
+</div>
+
+<script>
+const PX_PER_MIN = 1.2;
+const START_H = 9;   // 9 AM
+const END_H   = 22;  // 10 PM (covers Monday evening)
+const START_MINS = START_H * 60;
+const END_MINS   = END_H   * 60;
+const TOTAL_PX   = (END_MINS - START_MINS) * PX_PER_MIN;
+
+const days = [
+  {
+    date: "Mon, Aug 17",
+    events: [
+      { time: "Until 6:00 pm",  title: "Hang Welcome Posters", speaker: null,              type: "optional" },
+      { time: "6:00 – 8:00 pm", title: "Welcome Dinner",       speaker: "Cait Lamberton",  type: "meal"     },
+      { time: "8:00 pm Onward", title: "Hang Welcome Posters", speaker: null,              type: "optional" },
+    ]
+  },
+  {
+    date: "Tue, Aug 18",
+    events: [
+      { time: "9:00 – 9:30 am",      title: "Breakfast",           speaker: null,              type: "meal"    },
+      { time: "9:30 – 10:00 am",     title: "Housekeeping",        speaker: null,              type: "break"   },
+      { time: "10:00 am – 12:00 pm", title: "Opening Keynote",     speaker: "Angela Duckworth",type: "session" },
+      { time: "12:00 – 1:00 pm",     title: "Lunch",               speaker: null,              type: "meal"    },
+      { time: "1:00 – 5:00 pm",      title: "Values Bridge",       speaker: "Suzy Welch",      type: "session" },
+      { time: "5:30 – 5:45 pm",      title: "Parking Lot",         speaker: null,              type: "break"   },
+      { time: "6:00 – 7:00 pm",      title: "Dinner & Activities", speaker: null,              type: "meal"    },
+    ]
+  },
+  {
+    date: "Wed, Aug 19",
+    events: [
+      { time: "9:00 – 9:30 am",      title: "Breakfast",            speaker: null,            type: "meal"    },
+      { time: "9:30 – 11:30 am",     title: "Network Mapping",      speaker: "Drew Carton",   type: "session" },
+      { time: "11:30 am – 12:00 pm", title: "Break",                speaker: null,            type: "break"   },
+      { time: "12:00 – 1:00 pm",     title: "Working Lunch",        speaker: null,            type: "meal"    },
+      { time: "1:00 – 4:00 pm",      title: "NSO Circles Training", speaker: "Pablo Cerdera", type: "session" },
+      { time: "4:00 – 4:15 pm",      title: "Break",                speaker: null,            type: "break"   },
+      { time: "4:15 – 5:00 pm",      title: "Meet STEP",            speaker: null,            type: "session" },
+      { time: "5:00 – 6:00 pm",      title: "TBD",                  speaker: null,            type: "session" },
+      { time: "6:00 – 7:00 pm",      title: "Dinner & Activities",  speaker: null,            type: "meal"    },
+    ]
+  },
+  {
+    date: "Thu, Aug 20",
+    events: [
+      { time: "9:00 – 9:30 am",      title: "Breakfast",                   speaker: null,               type: "meal"    },
+      { time: "9:30 – 10:45 am",     title: "Developmental Relationships",  speaker: "Stephanie Creary", type: "session" },
+      { time: "10:45 am – 12:45 pm", title: "Coach Approach",               speaker: "Lisa Kramer",      type: "session" },
+      { time: "12:45 – 1:45 pm",     title: "Lunch",                        speaker: null,               type: "meal"    },
+      { time: "2:00 – 4:00 pm",      title: "Team Building Activity",       speaker: null,               type: "session" },
+      { time: "4:00 – 4:15 pm",      title: "Break",                        speaker: null,               type: "break"   },
+      { time: "4:15 – 5:30 pm",      title: "STEP × 1010TA Bonding",        speaker: null,               type: "session" },
+      { time: "5:30 – 6:00 pm",      title: "Break",                        speaker: null,               type: "break"   },
+      { time: "6:00 – 7:00 pm",      title: "Dinner & Activities",          speaker: null,               type: "meal"    },
+    ]
+  },
+  {
+    date: "Fri, Aug 21",
+    events: [
+      { time: "9:00 – 9:30 am",     title: "Breakfast",                   speaker: "Cait Lamberton", type: "meal"    },
+      { time: "9:30 am – 12:30 pm", title: "Dignity Centered Leadership",  speaker: "Justin Brown",   type: "session" },
+      { time: "12:30 – 1:00 pm",    title: "Lunch",                        speaker: null,             type: "meal"    },
+      { time: "1:00 – 4:00 pm",     title: "SLB-Led Training",             speaker: null,             type: "session" },
+      { time: "4:00 – 5:00 pm",     title: "Parking Lot & Closing Survey", speaker: null,             type: "break"   },
+      { time: "5:00 – 6:00 pm",     title: "Closing Dinner",               speaker: null,             type: "meal"    },
+    ]
+  }
+];
+
+function toMins(h, m, period) {
+  let hour = h;
+  if (period === 'pm' && h !== 12) hour += 12;
+  if (period === 'am' && h === 12) hour = 0;
+  return hour * 60 + m;
+}
+
+function parseTime(str) {
+  if (/^until/i.test(str)) {
+    const m = str.match(/(\d+):(\d+)\s*(am|pm)/i);
+    if (!m) return null;
+    const end = toMins(+m[1], +m[2], m[3].toLowerCase());
+    return { start: end - 180, end };
+  }
+  if (/onward/i.test(str)) {
+    const m = str.match(/(\d+):(\d+)\s*(am|pm)/i);
+    if (!m) return null;
+    const start = toMins(+m[1], +m[2], m[3].toLowerCase());
+    return { start, end: start + 60 };
+  }
+  const parts = str.split(/\s*[–-]\s*/);
+  if (parts.length !== 2) return null;
+  const em = parts[1].match(/(\d+):(\d+)\s*(am|pm)/i);
+  if (!em) return null;
+  const endMins = toMins(+em[1], +em[2], em[3].toLowerCase());
+  const sm = parts[0].match(/(\d+):(\d+)(?:\s*(am|pm))?/i);
+  if (!sm) return null;
+  const sH = +sm[1], sMin = +sm[2];
+  let sPer = sm[3] ? sm[3].toLowerCase() : null;
+  if (!sPer) {
+    const ePer = em[3].toLowerCase();
+    if (ePer === 'am') sPer = 'am';
+    else if (sH === 12) sPer = 'pm';
+    else if (sH <= +em[1]) sPer = 'pm';
+    else sPer = 'am';
+  }
+  return { start: toMins(sH, sMin, sPer), end: endMins };
+}
+
+function px(mins) { return (mins - START_MINS) * PX_PER_MIN; }
+
+const schedule = document.getElementById('schedule');
+
+// Time axis
+const timeCol = document.createElement('div');
+timeCol.className = 'time-col';
+timeCol.innerHTML = '<div class="time-header"></div>';
+
+const timeBody = document.createElement('div');
+timeBody.className = 'time-body';
+timeBody.style.height = TOTAL_PX + 'px';
+for (let h = START_H; h <= END_H; h++) {
+  const lbl = document.createElement('div');
+  lbl.className = 'time-label';
+  lbl.style.top = px(h * 60) + 'px';
+  lbl.textContent = h === 12 ? '12 PM' : h < 12 ? `${h} AM` : `${h - 12} PM`;
+  timeBody.appendChild(lbl);
+}
+timeCol.appendChild(timeBody);
+schedule.appendChild(timeCol);
+
+// Day columns
+days.forEach(day => {
+  const col = document.createElement('div');
+  col.className = 'day-col';
+
+  const header = document.createElement('div');
+  header.className = 'day-header';
+  header.textContent = day.date;
+  col.appendChild(header);
+
+  const body = document.createElement('div');
+  body.className = 'day-body';
+  body.style.height = TOTAL_PX + 'px';
+
+  // Hour grid lines
+  for (let h = START_H; h <= END_H; h++) {
+    const line = document.createElement('div');
+    line.className = 'hour-line';
+    line.style.top = px(h * 60) + 'px';
+    line.style.borderTop = (h === 12 || h === 18) ? '1px solid #ccc' : '1px solid #eee';
+    body.appendChild(line);
+  }
+
+  // Event blocks
+  day.events.forEach(ev => {
+    const range = parseTime(ev.time);
+    if (!range) return;
+    const clampStart = Math.max(range.start, START_MINS);
+    const clampEnd   = Math.min(range.end,   END_MINS);
+    if (clampEnd <= clampStart) return;
+
+    const top    = px(clampStart);
+    const height = Math.max((clampEnd - clampStart) * PX_PER_MIN, 6);
+
+    const block = document.createElement('div');
+    block.className = `evt evt-${ev.type}`;
+    block.style.top    = top + 'px';
+    block.style.height = height + 'px';
+
+    let html = '';
+    if (height >= 12) html += `<div class="evt-time">${ev.time}</div>`;
+    if (height >= 22) html += `<div class="evt-title">${ev.title}</div>`;
+    if (height >= 34 && ev.speaker) html += `<div class="evt-speaker">${ev.speaker}</div>`;
+    block.innerHTML = html;
+
+    body.appendChild(block);
+  });
+
+  col.appendChild(body);
+  schedule.appendChild(col);
+});
+</script>
+</body>
+</html>

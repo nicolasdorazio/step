@@ -10,24 +10,23 @@
     h1 { text-align: center; font-size: 24px; font-weight: 700; margin-bottom: 4px; }
     .subtitle { text-align: center; font-size: 17px; color: #555; margin-bottom: 24px; }
     .caption { display: none; }
-    .board { display: grid; grid-template-columns: repeat(5, minmax(0,1fr)); gap: 0; border: 1px solid #000; }
-    .col { border-right: 1px solid #000; display: flex; flex-direction: column; }
-    .col:last-child { border-right: none; }
-    .day-header { background: #0C447C; color: #fff; font-weight: 700; font-size: 15px; text-align: center; padding: 10px 8px; }
-    .theme { background: #B5D4F4; color: #042C53; font-style: italic; font-size: 14px; text-align: center; padding: 8px; border-bottom: 1px solid #000; border-top: 1px solid #000; min-height: 60px; display: flex; align-items: center; justify-content: center; }
-    .meta-row { font-size: 14px; text-align: center; padding: 7px 8px; border-bottom: 1px solid #000; }
+    .board-wrap { overflow-x: auto; margin: 0 auto; }
+    .board { display: grid; gap: 0; border-top: 1px solid #000; border-left: 1px solid #000; min-width: 500px; }
+    .day-header { background: #0C447C; color: #fff; font-weight: 700; font-size: 15px; text-align: center; padding: 10px 8px; border-right: 1px solid #000; border-bottom: 1px solid #000; }
+    .theme { background: #B5D4F4; color: #042C53; font-style: italic; font-size: 14px; text-align: center; padding: 8px; border-right: 1px solid #000; border-bottom: 1px solid #000; display: flex; align-items: center; justify-content: center; }
+    .meta-row { font-size: 14px; text-align: center; padding: 7px 8px; border-right: 1px solid #000; border-bottom: 1px solid #000; }
     .meta-row a { color: #185FA5; text-decoration: underline; }
     .meta-row a:hover { color: #0C447C; }
     .meta-row a.location-link { color: #000; text-decoration: none; }
     .meta-row a.location-link:hover { color: #000; text-decoration: none; }
-    .body { padding: 6px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+    .body { padding: 6px; display: flex; flex-direction: column; gap: 8px; border-right: 1px solid #000; border-bottom: 1px solid #000; }
     .card { background: #f1f3f7; border-radius: 5px; padding: 7px 6px; text-align: center; }
     .time { font-weight: 700; font-size: 13px; color: #185FA5; margin-bottom: 3px; }
     .title { font-style: italic; font-size: 14px; color: #111; margin-bottom: 0; }
     .speaker { line-height: 1; }
     .optional { font-size: 11px; color: #7BAFD4; font-style: italic; margin-top: 3px; }
-    .speaker a { font-size: 12px; color: #185FA5; text-decoration: underline; }
-    .speaker a:hover { color: #0C447C; }
+    .speaker a { font-size: 12px; color: #111; text-decoration: none; }
+    .speaker a:hover { color: #111; }
 
     /* Modal */
     #modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); align-items: center; justify-content: center; z-index: 1000; }
@@ -39,27 +38,44 @@
     #modal button { padding: 6px 16px; border: 1px solid #ccc; border-radius: 6px; background: #f5f5f5; cursor: pointer; font-size: 15px; }
     #modal button:hover { background: #e0e0e0; }
 
+    /* Role selector */
+    #role-screen { position: fixed; inset: 0; background: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 2000; gap: 24px; }
+    #role-screen h2 { font-size: 22px; font-weight: 700; color: #0C447C; text-align: center; }
+    #role-screen p { font-size: 15px; color: #555; }
+    .role-btn { padding: 14px 40px; font-size: 18px; font-weight: 700; border: none; border-radius: 8px; cursor: pointer; transition: background 0.15s; }
+    #btn-step { background: #0C447C; color: #fff; }
+    #btn-step:hover { background: #185FA5; }
+    #btn-wh1010 { background: #B5D4F4; color: #042C53; }
+    #btn-wh1010:hover { background: #7BAFD4; }
+    .role-btns { display: flex; gap: 16px; }
+
     @media (max-width: 700px) {
       body { padding: 16px; }
       h1 { font-size: 20px; }
       .subtitle { font-size: 15px; }
-      .board { grid-template-columns: 1fr; }
-      .board { border: none; }
-      .col { border: 1px solid #000; border-right: 1px solid #000; margin-bottom: 40px; }
-      .col:last-child { margin-bottom: 0; }
-      .theme { min-height: unset; }
     }
   </style>
 </head>
 <body>
 
-<h1>STEP Fall Training Schedule</h1>
+<h1>Fall Training Schedule</h1>
 <p class="subtitle">August 17–21, 2026</p>
 <p class="caption">Click any session for details &nbsp;·&nbsp; Speaker names link to their profile &nbsp;·&nbsp; Locations link to maps &nbsp;·&nbsp; Attendance forms linked per day</p>
 
-<div class="board" id="board"></div>
+<div id="role-screen">
+  <h2>Wharton Undergraduate Division<br>Fall Training 2026</h2>
+  <p>Who are you?</p>
+  <div class="role-btns">
+    <button class="role-btn" id="btn-step" onclick="selectRole('step')">STEP Mentor</button>
+    <button class="role-btn" id="btn-wh1010" onclick="selectRole('wh1010')">WH1010 TA</button>
+  </div>
+</div>
+
+<div class="board-wrap"><div class="board" id="board"></div></div>
 
 <p style="text-align: center; font-size: 14px; color: #777; margin-top: 20px;">To request edits, contact <a href="mailto:ndorazio@wharton.upenn.edu" style="color: #777;">ndorazio@wharton.upenn.edu</a>.</p>
+
+<p style="text-align: center; margin-top: 12px;"><button onclick="goBack()" style="background: none; border: none; color: #185FA5; font-size: 14px; cursor: pointer; text-decoration: underline;">← Switch role</button></p>
 
 <div id="modal-bg">
   <div id="modal">
@@ -143,6 +159,17 @@ const days = [
   }
 ];
 
+function goBack() {
+  document.getElementById('board').innerHTML = '';
+  document.getElementById('role-screen').style.display = 'flex';
+}
+
+function selectRole(role) {
+  document.getElementById('role-screen').style.display = 'none';
+  const filtered = role === 'wh1010' ? days.filter(d => d.date.startsWith('Thursday') || d.date.startsWith('Friday')) : days;
+  renderBoard(filtered);
+}
+
 const smallWords = new Set(['a','an','and','the','of','in','on','at','to','for','with','vs','&']);
 function toTitleCase(str) {
   return str.split(' ').map((w,i) => i !== 0 && smallWords.has(w.toLowerCase()) ? w.toLowerCase() : w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
@@ -150,37 +177,66 @@ function toTitleCase(str) {
 
 function closeModal() { document.getElementById('modal-bg').classList.remove('open'); }
 
-const board = document.getElementById('board');
+function makeCard(ev) {
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.style.cursor = 'pointer';
+  card.innerHTML = `<div class="time">${ev.time}</div><div class="title">${toTitleCase(ev.title)}</div>${ev.speaker ? `<div class="speaker"><a href="${ev.speakerUrl}" target="_blank" onclick="event.stopPropagation()">${ev.speaker}</a></div>` : ''}${ev.optional ? '<div class="optional">* optional</div>' : ''}`;
+  card.addEventListener('click', () => {
+    document.getElementById('m-title').innerHTML = toTitleCase(ev.title);
+    document.getElementById('m-time').textContent = ev.time + (ev.speaker ? ' · ' + ev.speaker : '');
+    document.getElementById('m-desc').textContent = ev.desc;
+    document.getElementById('modal-bg').classList.add('open');
+  });
+  return card;
+}
 
-days.forEach(day => {
-  const col = document.createElement('div');
-  col.className = 'col';
+function renderBoard(daysToShow) {
+  const board = document.getElementById('board');
+  board.innerHTML = '';
+  board.style.gridTemplateColumns = `repeat(${daysToShow.length}, minmax(160px,1fr))`;
+  board.parentElement.style.maxWidth = daysToShow.length <= 3 ? (daysToShow.length * 320) + 'px' : '';
 
-  col.innerHTML = `<div class="day-header">${day.date}</div>
-    <div class="theme">${day.theme.replace('\n','<br>')}</div>
-    <div class="meta-row"><a class="location-link" href="${day.mapUrl}" target="_blank">${day.location}</a></div>
-    <div class="meta-row"><a href="${day.formUrl}" target="_blank">Attendance Form</a></div>`;
-
-  const body = document.createElement('div');
-  body.className = 'body';
-
-  day.events.forEach(ev => {
-    const card = document.createElement('div');
-    card.className = 'card';
-    card.style.cursor = 'pointer';
-    card.innerHTML = `<div class="time">${ev.time}</div><div class="title">${toTitleCase(ev.title)}</div>${ev.speaker ? `<div class="speaker"><a href="${ev.speakerUrl}" target="_blank" onclick="event.stopPropagation()">${ev.speaker}</a></div>` : ''}${ev.optional ? '<div class="optional">* optional</div>' : ''}`;
-    card.addEventListener('click', () => {
-      document.getElementById('m-title').innerHTML = toTitleCase(ev.title);
-      document.getElementById('m-time').textContent = ev.time + (ev.speaker ? ' · ' + ev.speaker : '');
-      document.getElementById('m-desc').textContent = ev.desc;
-      document.getElementById('modal-bg').classList.add('open');
-    });
-    body.appendChild(card);
+  // Row 1: day headers
+  daysToShow.forEach(day => {
+    const el = document.createElement('div');
+    el.className = 'day-header';
+    el.textContent = day.date;
+    board.appendChild(el);
   });
 
-  col.appendChild(body);
-  board.appendChild(col);
-});
+  // Row 2: themes
+  daysToShow.forEach(day => {
+    const el = document.createElement('div');
+    el.className = 'theme';
+    el.innerHTML = day.theme.replace('\n', '<br>');
+    board.appendChild(el);
+  });
+
+  // Row 3: locations
+  daysToShow.forEach(day => {
+    const el = document.createElement('div');
+    el.className = 'meta-row';
+    el.innerHTML = `<a class="location-link" href="${day.mapUrl}" target="_blank">${day.location}</a>`;
+    board.appendChild(el);
+  });
+
+  // Row 4: attendance forms
+  daysToShow.forEach(day => {
+    const el = document.createElement('div');
+    el.className = 'meta-row';
+    el.innerHTML = `<a href="${day.formUrl}" target="_blank">Attendance Form</a>`;
+    board.appendChild(el);
+  });
+
+  // Row 5: event bodies
+  daysToShow.forEach(day => {
+    const body = document.createElement('div');
+    body.className = 'body';
+    day.events.forEach(ev => body.appendChild(makeCard(ev)));
+    board.appendChild(body);
+  });
+} // end renderBoard
 
 document.getElementById('modal-bg').addEventListener('click', e => { if (e.target.id === 'modal-bg') closeModal(); });
 </script>
