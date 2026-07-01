@@ -242,6 +242,9 @@ function renderBoard(daysToShow) {
 } // end renderBoard
 
 document.getElementById('modal-bg').addEventListener('click', e => { if (e.target.id === 'modal-bg') closeModal(); });
+
+// Auto-select STEP view on load. To re-enable role selector, remove the line below.
+selectRole('step');
 </script>
 </body>
 </html>
