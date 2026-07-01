@@ -3,13 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>STEP Fall Training Schedule | August 17–21, 2026</title>
+  <title>MOCKUP — No Cards</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fff; padding: 32px; }
     h1 { text-align: center; font-size: 24px; font-weight: 700; margin-bottom: 4px; }
     .subtitle { text-align: center; font-size: 17px; color: #555; margin-bottom: 24px; }
-    .caption { display: none; }
+    .badge { display: block; text-align: center; font-size: 12px; font-weight: 600; color: #7a5900; background: #fff3cd; border: 1px solid #ffc107; border-radius: 12px; padding: 3px 14px; margin: -16px auto 24px; width: fit-content; }
+
     .board-wrap { overflow-x: auto; margin: 0 auto; }
     .board { display: grid; gap: 0; border-top: 1px solid #000; border-left: 1px solid #000; min-width: 500px; }
     .day-header { background: #0C447C; color: #fff; font-weight: 700; font-size: 15px; text-align: center; padding: 10px 8px; border-right: 1px solid #000; border-bottom: 1px solid #000; }
@@ -18,16 +19,15 @@
     .meta-row a { color: #185FA5; text-decoration: underline; }
     .meta-row a:hover { color: #0C447C; }
     .meta-row a.location-link { color: #000; text-decoration: none; }
-    .meta-row a.location-link:hover { color: #000; text-decoration: none; }
+
+    /* Events — no card boxes */
     .body { padding: 0; display: flex; flex-direction: column; border-right: 1px solid #000; border-bottom: 1px solid #000; }
-    .event { padding: 10px; text-align: center; border-bottom: 1px solid #e8e8e8; }
+    .event { padding: 10px 10px; text-align: center; border-bottom: 1px solid #e8e8e8; }
     .event:last-child { border-bottom: none; }
     .time { font-weight: 700; font-size: 13px; color: #185FA5; margin-bottom: 3px; }
-    .title { font-style: italic; font-size: 14px; color: #111; margin-bottom: 0; }
-    .speaker { line-height: 1; }
-    .optional { font-size: 11px; color: #7BAFD4; font-style: italic; margin-top: 3px; }
-    .speaker a { font-size: 12px; color: #111; text-decoration: none; }
-    .speaker a:hover { color: #111; }
+    .title { font-style: italic; font-size: 14px; color: #111; }
+    .speaker { font-size: 12px; color: #111; margin-top: 2px; }
+    .optional { font-size: 11px; color: #7BAFD4; font-style: italic; margin-top: 2px; }
 
     /* Modal */
     #modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); align-items: center; justify-content: center; z-index: 1000; }
@@ -59,10 +59,6 @@
 </head>
 <body>
 
-<h1>Fall Training Schedule</h1>
-<p class="subtitle">August 17–21, 2026</p>
-<p class="caption">Click any session for details &nbsp;·&nbsp; Speaker names link to their profile &nbsp;·&nbsp; Locations link to maps &nbsp;·&nbsp; Attendance forms linked per day</p>
-
 <div id="role-screen">
   <h2>Wharton Undergraduate Division<br>Fall Training 2026</h2>
   <p>Who are you?</p>
@@ -72,10 +68,13 @@
   </div>
 </div>
 
+<h1>Fall Training Schedule</h1>
+<p class="subtitle">August 17–21, 2026</p>
+<p class="badge">MOCKUP — no card boxes</p>
+
 <div class="board-wrap"><div class="board" id="board"></div></div>
 
 <p style="text-align: center; font-size: 14px; color: #777; margin-top: 20px;">To request edits, contact <a href="mailto:ndorazio@wharton.upenn.edu" style="color: #777;">ndorazio@wharton.upenn.edu</a>.</p>
-
 <p style="text-align: center; margin-top: 12px;"><button onclick="goBack()" style="background: none; border: none; color: #185FA5; font-size: 14px; cursor: pointer; text-decoration: underline;">← Switch role</button></p>
 
 <div id="modal-bg">
@@ -160,6 +159,13 @@ const days = [
   }
 ];
 
+const smallWords = new Set(['a','an','and','the','of','in','on','at','to','for','with','vs','&']);
+function toTitleCase(str) {
+  return str.split(' ').map((w,i) => i !== 0 && smallWords.has(w.toLowerCase()) ? w.toLowerCase() : w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+}
+
+function closeModal() { document.getElementById('modal-bg').classList.remove('open'); }
+
 function goBack() {
   document.getElementById('board').innerHTML = '';
   document.getElementById('role-screen').style.display = 'flex';
@@ -172,19 +178,11 @@ function selectRole(role) {
   renderBoard(filtered);
 }
 
-const smallWords = new Set(['a','an','and','the','of','in','on','at','to','for','with','vs','&']);
-function toTitleCase(str) {
-  return str.split(' ').map((w,i) => i !== 0 && smallWords.has(w.toLowerCase()) ? w.toLowerCase() : w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
-}
-
-function closeModal() { document.getElementById('modal-bg').classList.remove('open'); }
-
-
-function makeCard(ev) {
+function makeEvent(ev) {
   const el = document.createElement('div');
   el.className = 'event';
   el.style.cursor = 'pointer';
-  el.innerHTML = `<div class="time">${ev.time}</div><div class="title">${toTitleCase(ev.title)}</div>${ev.speaker ? `<div class="speaker"><a href="${ev.speakerUrl}" target="_blank" onclick="event.stopPropagation()">${ev.speaker}</a></div>` : ''}${ev.optional ? '<div class="optional">* optional</div>' : ''}`;
+  el.innerHTML = `<div class="time">${ev.time}</div><div class="title">${toTitleCase(ev.title)}</div>${ev.speaker ? `<div class="speaker">${ev.speaker}</div>` : ''}${ev.optional ? '<div class="optional">* optional</div>' : ''}`;
   el.addEventListener('click', () => {
     document.getElementById('m-title').innerHTML = toTitleCase(ev.title);
     document.getElementById('m-time').textContent = ev.time + (ev.speaker ? ' · ' + ev.speaker : '');
@@ -200,46 +198,37 @@ function renderBoard(daysToShow) {
   board.style.gridTemplateColumns = `repeat(${daysToShow.length}, minmax(160px,1fr))`;
   board.parentElement.style.maxWidth = daysToShow.length <= 3 ? (daysToShow.length * 320) + 'px' : '';
 
-  // Row 1: day headers
   daysToShow.forEach(day => {
     const el = document.createElement('div');
     el.className = 'day-header';
     el.textContent = day.date;
     board.appendChild(el);
   });
-
-  // Row 2: themes
   daysToShow.forEach(day => {
     const el = document.createElement('div');
     el.className = 'theme';
     el.innerHTML = day.theme.replace('\n', '<br>');
     board.appendChild(el);
   });
-
-  // Row 3: locations
   daysToShow.forEach(day => {
     const el = document.createElement('div');
     el.className = 'meta-row';
     el.innerHTML = `<a class="location-link" href="${day.mapUrl}" target="_blank">${day.location}</a>`;
     board.appendChild(el);
   });
-
-  // Row 4: attendance forms
   daysToShow.forEach(day => {
     const el = document.createElement('div');
     el.className = 'meta-row';
     el.innerHTML = `<a href="${day.formUrl}" target="_blank">Attendance Form</a>`;
     board.appendChild(el);
   });
-
-  // Row 5: event bodies
   daysToShow.forEach(day => {
     const body = document.createElement('div');
     body.className = 'body';
-    day.events.forEach(ev => body.appendChild(makeCard(ev)));
+    day.events.forEach(ev => body.appendChild(makeEvent(ev)));
     board.appendChild(body);
   });
-} // end renderBoard
+}
 
 document.getElementById('modal-bg').addEventListener('click', e => { if (e.target.id === 'modal-bg') closeModal(); });
 </script>
